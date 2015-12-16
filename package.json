@@ -1,0 +1,14 @@
+{
+  "name": "viki-duplicate-finder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "vpf.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Xinzi Zhou",
+  "license": "MIT",
+  "dependencies": {
+    "fnv-plus": "^1.2.12"
+  }
+}
