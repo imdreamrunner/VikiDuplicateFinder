@@ -1,7 +1,8 @@
 "use strict";
 
-var logger = require('./logger');
 var sqlite3 = require('sqlite3').verbose();
+
+var logger = require('./logger');
 var helper = require('./helper');
 var constant = require('./constant');
 

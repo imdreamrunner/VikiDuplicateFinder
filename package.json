@@ -9,6 +9,8 @@
   "author": "Xinzi Zhou",
   "license": "MIT",
   "dependencies": {
-    "fnv-plus": "^1.2.12"
+    "cheerio": "^0.19.0",
+    "dateformat": "^1.0.12",
+    "sqlite3": "^3.1.1"
   }
 }
