@@ -13,7 +13,7 @@ var db = new sqlite3.Database(DATABASE_FILE);
 var LOG_TAGS = ['DATABASE'];
 
 var STATUS_NEW = 0;
-var STATUS_PROCESSED = 1;
+var STATUS_PROCESSING = 1;
 
 var SQL_DROP_TABLES = `
     DROP TABLE IF EXISTS urls;
@@ -143,11 +143,11 @@ function fetchNewUrls(num, callback) {
 
 function markUrlProcessed(url, callback) {
     if (isClosed) return;
-    db.run(SQL_UPDATE_URL_STATUS, STATUS_PROCESSED, url, function(err) {
+    db.run(SQL_UPDATE_URL_STATUS, STATUS_PROCESSING, url, function(err) {
         if (err) {
             throw err;
         }
-        logger.log(LOG_TAGS, "Marked URL " + url + " as processed.");
+        logger.log(LOG_TAGS, "Marked URL " + url + " as processing.");
         if (callback) callback();
     });
 }

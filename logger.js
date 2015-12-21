@@ -25,7 +25,7 @@ function close() {
 
 function log(tags, message) {
     var currentTime = new Date();
-    var currentTimeString = dateformat(currentTime, "yyyy-mm-dd h:MM:ss");
+    var currentTimeString = dateformat(currentTime, "yyyy-mm-dd H:MM:ss");
     var printOutMessage = currentTimeString + " [" + tags.join(", ") + "] " + message;
     console.log(printOutMessage);
     var fileLogMessage = currentTime.getTime() + "|" + tags.join(',') + "|" + message + '\n';

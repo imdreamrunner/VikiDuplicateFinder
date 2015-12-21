@@ -74,12 +74,18 @@ function completeTask(taskId) {
 
 // Internal function that runs a task.
 function runTask() {
+    logger.log(LOG_TAGS, "Trying to run new task.");
     if (!isRunning) return;
 
     // Scheduler is becoming empty. Ask for more task from control.
     if (numQueueingTask < 2 * config.MAX_CONCURRENT_HTTP_CONNECTION) {
-        require('./control').loadTasks();
+        require('./control').loadTasks(selectTaskAndRun);
+    } else {
+        selectTaskAndRun();
     }
+}
+
+function selectTaskAndRun() {
 
     // Select a task to run.
     if (availableWorkers.length > 0 && numQueueingTask > 0) {
@@ -101,6 +107,7 @@ function runTask() {
             throw Error("Expected a queueing task.")
         }
     }
+
 }
 
 function start() {
@@ -109,6 +116,7 @@ function start() {
 }
 
 function stop() {
+    logger.log(LOG_TAGS, "Stopping scheduler");
     isRunning = false;
 }
 

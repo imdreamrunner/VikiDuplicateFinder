@@ -32,6 +32,7 @@ class Task {
         this.completeTask();
     }
     completeTask() {
+        logger.log(TASK_LOG_TAGS, "Complete task for URL " + this.url);
         scheduler.completeTask(this.taskId);
     }
 }
@@ -61,7 +62,10 @@ function processHtml(url, html, callback) {
 var loadingTask = false;
 
 function loadTasks(callback) {
-    if (loadingTask) return;
+    if (loadingTask) {
+        if (callback) callback();
+        return;
+    }
     loadingTask = true;
     var maxNumFetched = config.MAX_CONCURRENT_HTTP_CONNECTION * 3;
     database.fetchNewUrls(maxNumFetched, function(urls) {
