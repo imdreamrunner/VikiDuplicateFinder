@@ -27,10 +27,13 @@ class Task {
     }
     successCallback(statusCode, content) {
         logger.workerLog(this.workerId, "Received content with status code: " + statusCode);
-        processHtml(this.url, content, this.completeTask.bind(this));
+        var self = this;
+        processHtml(this.url, content, function() {
+            database.changeUrlStatus(self.url, constant.STATUS_SUCCEED, self.completeTask.bind(self));
+        });
     }
     errorCallback() {
-        this.completeTask();
+        database.changeUrlStatus(this.url, constant.STATUS_FAILED, this.completeTask.bind(this));
     }
     completeTask() {
         logger.workerLog(this.workerId, "Completed task " + this.taskId + " for URL " + this.url);
@@ -88,7 +91,7 @@ function loadTasks(callback) {
             logger.log(LOG_TAGS, "Load URL " + url + " from database.");
             try {
                 new Task(url);
-                database.markUrlProcessed(url, function() {
+                database.changeUrlStatus(url, constant.STATUS_PROCESSING, function() {
                     numFinished ++;
                     if (numFinished == numExpected) finishing();
                 });

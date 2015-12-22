@@ -13,9 +13,6 @@ var db = new sqlite3.Database(DATABASE_FILE);
 
 var LOG_TAGS = ['DATABASE'];
 
-var STATUS_NEW = 0;
-var STATUS_PROCESSING = 1;
-
 var SQL_DROP_TABLES = `
     DROP TABLE IF EXISTS urls;
     DROP TABLE IF EXISTS contents;
@@ -112,7 +109,7 @@ function addUrls(urlSet, callback) {
         if (callback) callback();
     }
     urlSet.forEach(function(url) {
-        db.run(SQL_INSERT_URL, url, helper.getUrlType(url), STATUS_NEW, function (err) {
+        db.run(SQL_INSERT_URL, url, helper.getUrlType(url), constant.STATUS_NEW, function (err) {
             numAdded ++;
             if (err) {
                 //logger.log(LOG_TAGS, "Ignored URL " + url + " into database.");
@@ -132,7 +129,7 @@ function addUrls(urlSet, callback) {
 
 function fetchNewUrls(num, callback) {
     if (isClosed) return;
-    db.all(SQL_FETCH_URLS, STATUS_NEW, num, function(err, rows) {
+    db.all(SQL_FETCH_URLS, constant.STATUS_NEW, num, function(err, rows) {
         if (err) {
             throw err;
         }
@@ -144,9 +141,9 @@ function fetchNewUrls(num, callback) {
     });
 }
 
-function markUrlProcessed(url, callback) {
+function changeUrlStatus(url, status, callback) {
     if (isClosed) return;
-    db.run(SQL_UPDATE_URL_STATUS, STATUS_PROCESSING, url, function(err) {
+    db.run(SQL_UPDATE_URL_STATUS, status, url, function(err) {
         if (err) {
             throw err;
         }
@@ -171,5 +168,5 @@ module.exports = {
     addUrls: addUrls,
     fetchNewUrls: fetchNewUrls,
     createContent: createContent,
-    markUrlProcessed: markUrlProcessed
+    changeUrlStatus: changeUrlStatus
 };
