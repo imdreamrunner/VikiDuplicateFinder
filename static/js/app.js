@@ -9,7 +9,7 @@ var app = angular.module('VdfApp', ['ngWebSocket', 'luegg.directives']);
 
 
 app.factory('Server', function($websocket) {
-    var ws = $websocket('ws://127.0.0.1:3001/');
+    var ws = $websocket('ws://' + document.domain + ':3001/');
     var service = {};
     var logs = [];
     var workerStatus = {};
