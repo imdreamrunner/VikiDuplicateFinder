@@ -11,6 +11,9 @@
   "dependencies": {
     "cheerio": "^0.19.0",
     "dateformat": "^1.0.12",
+    "koa": "^1.1.2",
+    "koa-static": "^1.5.2",
+    "nodejs-websocket": "^1.4.1",
     "sqlite3": "^3.1.1"
   }
 }

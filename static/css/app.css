@@ -1,0 +1,52 @@
+#header {
+  background: #3C9CD7;
+  color: #FFFFFF;
+}
+#header h1 {
+  font-size: 28px;
+  margin: 10px 0;
+}
+body,
+html {
+  background-color: #eeeeee !important;
+}
+section {
+  margin: 30px 0;
+}
+section .container {
+  border: 1px solid #CCCCCC;
+  border-radius: 5px;
+  background: #FFFFFF;
+}
+section .container h2 {
+  position: absolute;
+  display: block;
+  font-size: 14px;
+  font-weight: normal;
+  border: 1px solid #CCCCCC;
+  padding: 4px 6px;
+  background: #FFFFFF;
+  margin: -15px 0 0 0;
+  border-radius: 5px;
+  z-index: 50;
+}
+section .container .row {
+  padding-top: 20px;
+}
+#control button {
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+#log-panel {
+  height: 500px;
+  overflow-y: hidden;
+  font-family: Consolas, monospace;
+  margin-bottom: 15px;
+}
+#log-panel .log-item span {
+  background: #AAAAAA;
+  color: #FFFFFF;
+  border-radius: 4px;
+  padding: 2px 4px 0 4px;
+  margin-right: 4px;
+}

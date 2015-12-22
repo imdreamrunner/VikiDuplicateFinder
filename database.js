@@ -96,11 +96,13 @@ function initialize(callback) {
     });
 }
 
-function tearDown() {
+function tearDown(callback) {
     if (isClosed) return;
     isClosed = true;
     logger.log(LOG_TAGS, "Tear down.");
-    db.close();
+    db.close(function() {
+        if (callback) callback();
+    });
 }
 
 function addUrls(urlSet, callback) {
@@ -113,15 +115,15 @@ function addUrls(urlSet, callback) {
         db.run(SQL_INSERT_URL, url, helper.getUrlType(url), STATUS_NEW, function (err) {
             numAdded ++;
             if (err) {
-                logger.log(LOG_TAGS, "Ignored URL " + url + " into database.");
+                //logger.log(LOG_TAGS, "Ignored URL " + url + " into database.");
                 numError ++;
             } else {
-                logger.log(LOG_TAGS, "Inserted URL " + url + " into database.");
+                //logger.log(LOG_TAGS, "Inserted URL " + url + " into database.");
                 numSuccess ++;
             }
             if (numAdded == urlSet.size) {
-                logger.log(LOG_TAGS, "Inserted " + numSuccess + " URLs into database.");
-                logger.log(LOG_TAGS, "Ignored " + numError + " URLs.");
+                logger.log(LOG_TAGS, "Inserted " + numSuccess + " URLs into database," +
+                                     " Ignored " + numError + " URLs.");
                 if (callback) callback();
             }
         });

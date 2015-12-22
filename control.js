@@ -6,11 +6,11 @@ var config = require('./config');
 var parser = require('./parser');
 var scheduler = require('./scheduler');
 var database = require('./database');
+var monitor = require('./monitor');
 var helper = require('./helper');
 var constant = require('./constant');
 
 var LOG_TAGS = ['CONTROL'];
-var TASK_LOG_TAGS = LOG_TAGS.concat(['TASK']);
 var PROCESS_LOG_TAGS = LOG_TAGS.concat(['PROCESS']);
 
 
@@ -19,20 +19,21 @@ class Task {
         this.url = url;
         this.taskId = scheduler.addTask(this.start.bind(this));
     }
-    start() {
-        logger.log(TASK_LOG_TAGS, "Start task " + this.url);
-        var constructedUrl = 'https://www.viki.com' + this.url;
+    start(workerId) {
+        this.workerId = workerId;
+        logger.workerLog(this.workerId, "Running task " + this.taskId + " with URL " + this.url);
+        var constructedUrl = constant.TARGET_BASE_URL + this.url;
         remote.fetchRemoteContent(constructedUrl, this.successCallback.bind(this), this.errorCallback.bind(this));
     }
     successCallback(statusCode, content) {
-        logger.log(TASK_LOG_TAGS, "Received content with status code: " + statusCode);
+        logger.workerLog(this.workerId, "Received content with status code: " + statusCode);
         processHtml(this.url, content, this.completeTask.bind(this));
     }
     errorCallback() {
         this.completeTask();
     }
     completeTask() {
-        logger.log(TASK_LOG_TAGS, "Complete task for URL " + this.url);
+        logger.workerLog(this.workerId, "Completed task " + this.taskId + " for URL " + this.url);
         scheduler.completeTask(this.taskId);
     }
 }
@@ -63,9 +64,11 @@ var loadingTask = false;
 
 function loadTasks(callback) {
     if (loadingTask) {
+        logger.log(LOG_TAGS, "Currently loading task.");
         if (callback) callback();
         return;
     }
+    logger.log(LOG_TAGS, "Trying to load tasks.");
     loadingTask = true;
     var maxNumFetched = config.MAX_CONCURRENT_HTTP_CONNECTION * 3;
     database.fetchNewUrls(maxNumFetched, function(urls) {
@@ -99,6 +102,65 @@ function loadTasks(callback) {
     });
 }
 
+const STARTING_URL = "/";
+
+function addInitialUrl(callback) {
+    var startUrlSet = new Set();
+    startUrlSet.add(STARTING_URL);
+    database.addUrls(startUrlSet, callback);
+}
+
+
+var preparingJobs = [
+    logger.initialize,
+    monitor.startMonitor
+];
+
+var prepare = helper.bulkTaskRunner(preparingJobs);
+
+var initJobs = [
+    database.initialize,
+    addInitialUrl
+];
+
+function init() {
+    helper.bulkTaskRunner(initJobs)();
+}
+
+var startingJobs = [
+    loadTasks,
+    scheduler.start
+];
+
+function start() {
+    helper.bulkTaskRunner(startingJobs)();
+}
+
+function stop() {
+    scheduler.stop();
+}
+
+function exitProcess() {
+    logger.log(LOG_TAGS, "Exiting process.");
+    process.exit(0);
+}
+
+var exitingJobs = [
+    scheduler.stop,
+    database.tearDown,
+    logger.close,
+    exitProcess
+];
+
+function exit() {
+    helper.bulkTaskRunner(exitingJobs)();
+}
+
 module.exports = {
-    loadTasks: loadTasks
+    prepare: prepare,
+    init: init,
+    start: start,
+    loadTasks: loadTasks,
+    stop: stop,
+    exit: exit
 };

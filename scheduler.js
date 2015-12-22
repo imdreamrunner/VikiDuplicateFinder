@@ -66,7 +66,6 @@ function completeTask(taskId) {
     var workerId = taskWorker[taskId];
     availableWorkers.push(workerId);
     logger.log(LOG_TAGS, "Complete task id " + taskId);
-    logger.workerLog(workerId, "Completed task " + taskId);
     numRunningTask --;
 
     runTask();
@@ -74,7 +73,8 @@ function completeTask(taskId) {
 
 // Internal function that runs a task.
 function runTask() {
-    logger.log(LOG_TAGS, "Trying to run new task.");
+    logger.log(LOG_TAGS, "Trying to run new task. Current available workers: " + availableWorkers.length +
+                         " Current queuing tasks: " + numQueueingTask);
     if (!isRunning) return;
 
     // Scheduler is becoming empty. Ask for more task from control.
@@ -96,28 +96,27 @@ function selectTaskAndRun() {
             numRunningTask ++;
             numQueueingTask --;
             var task = taskList[nextRunId];
-            logger.log(LOG_TAGS, "Run task id " + nextRunId);
-            logger.workerLog(workerId, "Run task " + nextRunId);
             nextRunId ++;
             if (nextRunId > MAX_TASK_ID) {
                 nextRunId = 0;
             }
-            task();
-        } else {
-            throw Error("Expected a queueing task.")
+            task(workerId);
+            selectTaskAndRun();
         }
     }
 
 }
 
 function start() {
+    logger.log(LOG_TAGS, "starting scheduler");
     isRunning = true;
     runTask();
 }
 
-function stop() {
+function stop(callback) {
     logger.log(LOG_TAGS, "Stopping scheduler");
     isRunning = false;
+    if (callback) callback();
 }
 
 module.exports = {

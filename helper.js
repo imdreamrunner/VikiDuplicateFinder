@@ -1,4 +1,5 @@
 var constant = require('./constant');
+var logger = require('./logger');
 
 var CHANNEL_URL = /^\/tv\/[^?\/]+$/;
 var VIDEO_URL = /^\/videos\/[^?\/]+$/;
@@ -12,6 +13,21 @@ function getUrlType(url) {
     return constant.TYPE_OTHER;
 }
 
+
+function bulkTaskRunner(taskList) {
+    var taskExecuted = 0;
+    var executeTask = function() {
+        if (taskExecuted < taskList.length) {
+            logger.log(['BULK'], "Executing bulk task " + taskExecuted);
+            taskExecuted ++;
+            taskList[taskExecuted - 1](executeTask);
+        }
+    };
+    return executeTask;
+}
+
+
 module.exports = {
-    getUrlType: getUrlType
+    getUrlType: getUrlType,
+    bulkTaskRunner: bulkTaskRunner
 };

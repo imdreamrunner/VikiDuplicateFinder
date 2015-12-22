@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Viki Duplicate Content Finder</title>
+
+    <link href="css/app.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body ng-app="VdfApp">
+
+<header id="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Viki Duplicate Content Finder</h1>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section id="control" ng-controller="ControlController">
+    <div class="container">
+        <h2>Control</h2>
+        <div class="row">
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-primary btn-block" ng-click="initialize()">
+                    <span class="glyphicon glyphicon-open-file" aria-hidden="true"></span>
+                    Initialize
+                </button>
+            </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-success btn-block" ng-click="start()">
+                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                    Start
+                </button>
+            </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-info btn-block" ng-click="pause()">
+                    <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                    Pause
+                </button>
+            </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-danger btn-block">
+                    <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+                    Stop
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section ng-controller="WorkerController">
+    <div class="container">
+        <h2>Worker Status</h2>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="col-sm-1 text-center">Worker</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(workerId, status) in workerStatus">
+                        <th class="col-sm-1 text-center">
+                            {{ workerId }}
+                        </th>
+                        <td>
+                            {{ status }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section ng-controller="LogController">
+    <div class="container">
+        <h2>Log</h2>
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="log-panel" scroll-glue>
+                    <div class="log-item" ng-repeat="log in logs">
+                        <span ng-repeat="tag in log.tags">{{ tag }}</span>
+                        {{ log.message }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angular-websocket.min.js"></script>
+<script src="js/scrollglue.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

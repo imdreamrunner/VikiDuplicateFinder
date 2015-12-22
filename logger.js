@@ -7,6 +7,7 @@ var dateformat = require('dateformat');
 var LOG_FILE = 'log.txt';
 
 var logStream = null;
+var workerStatus = {};
 
 function initialize(callback) {
     // clear file.
@@ -19,8 +20,12 @@ function initialize(callback) {
 
 }
 
-function close() {
-    logStream.end();
+function close(callback) {
+    log(["LOGGER"], "Closing logger");
+    logStream.end(function() {
+        logStream = null;
+        if (callback) callback();
+    });
 }
 
 function log(tags, message) {
@@ -29,12 +34,25 @@ function log(tags, message) {
     var printOutMessage = currentTimeString + " [" + tags.join(", ") + "] " + message;
     console.log(printOutMessage);
     var fileLogMessage = currentTime.getTime() + "|" + tags.join(',') + "|" + message + '\n';
-    logStream.write(fileLogMessage);
+    broadcast({
+        workerStatus: workerStatus,
+        tags: tags,
+        message: message
+    });
+    if (logStream) {
+        logStream.write(fileLogMessage);
+    }
 }
 
 function workerLog(workerId, message) {
     var tags = ["WORKER", "WORKER-" + workerId];
+    workerStatus[workerId] = message;
     log(tags, message);
+}
+
+function broadcast(message) {
+    const communication = require('./communication');
+    communication.informMonitors(message);
 }
 
 module.exports = {
