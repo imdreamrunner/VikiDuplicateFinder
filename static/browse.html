@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Result - Viki Duplicate Content Finder</title>
+
+    <link href="css/app.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body ng-app="VdfBrowseApp">
+
+<header id="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>Viki Duplicate Content Finder</h1>
+                <a class="btn btn-default pull-right" href="./" role="button">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section ng-controller="FilterController">
+    <div class="container">
+        <h2>Filters</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Content Type</label>
+                    <select class="form-control">
+                        <option>All</option>
+                        <option>Channel</option>
+                        <option>Video</option>
+                        <option>Celebrity</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Minimum Count</label>
+                    <select class="form-control">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section ng-controller="TableController">
+    <div class="container">
+        <h2>Result</h2>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="col-sm-1 text-center">Worker</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(workerId, status) in workerStatus">
+                        <th class="col-sm-1 text-center">
+                            {{ workerId }}
+                        </th>
+                        <td>
+                            {{ status }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angular-websocket.min.js"></script>
+<script src="js/scrollglue.js"></script>\
+</body>
+</html>

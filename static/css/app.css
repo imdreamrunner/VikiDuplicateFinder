@@ -3,8 +3,13 @@
   color: #FFFFFF;
 }
 #header h1 {
+  display: inline-block;
   font-size: 28px;
   margin: 10px 0;
+}
+#header a.btn {
+  border: none;
+  margin: 9px 0 0;
 }
 body,
 html {

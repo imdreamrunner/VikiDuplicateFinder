@@ -26,14 +26,17 @@ var SQL_CREATE_TABLE_URLS = `CREATE TABLE urls (
 )`;
 
 var SQL_CREATE_TABLE_CONTENT = `CREATE TABLE contents (
-    title TEXT PRIMARY KEY,
-    count INTEGER
+    type INTEGER,
+    title TEXT,
+    count INTEGER,
+    PRIMARY KEY (type, title)
 )`;
 
 var SQL_CREATE_TABLE_CONTENT_URL = `CREATE TABLE content_url (
-    content TEXT,
+    type INTEGER,
+    title TEXT,
     url TEXT,
-    FOREIGN KEY(content) REFERENCES contents(title),
+    FOREIGN KEY(type, title) REFERENCES contents(type, title),
     FOREIGN KEY(URL) REFERENCES urls(url)
 )`;
 
@@ -47,13 +50,13 @@ VALUES (?,   ?   , ?     )
 `;
 
 var SQL_INSERT_CONTENT = `INSERT INTO
-contents (title, count)
-VALUES   (?,     0)
+contents (type, title, count)
+VALUES   (?,    ?,     0)
 `;
 
 var SQL_INSERT_CONTENT_URL = `INSERT INTO
-content_url (content, url)
-VALUES      (?,       ?)
+content_url (type, title, url)
+VALUES      (?,    ?,     ?)
 `;
 
 var SQL_FETCH_URLS = `SELECT url FROM urls
@@ -66,7 +69,7 @@ WHERE url = ?`;
 
 var SQL_UPDATE_CONTENT_COUNT = `UPDATE contents
 SET count = count + 1
-WHERE title = ?`;
+WHERE type = ? and title = ?`;
 
 var INITIALIZATION_SQLS = [
     SQL_DROP_TABLES,
@@ -147,18 +150,18 @@ function changeUrlStatus(url, status, callback) {
         if (err) {
             throw err;
         }
-        logger.log(LOG_TAGS, "Marked URL " + url + " as processing.");
         if (callback) callback();
     });
 }
 
 function createContent(url, contentTitle) {
     db.serialize(function() {
-        db.run(SQL_INSERT_CONTENT, contentTitle, function(err) {
+        var urlType = helper.getUrlType(url);
+        db.run(SQL_INSERT_CONTENT, urlType, contentTitle, function(err) {
             // Ignored
         });
-        db.run(SQL_UPDATE_CONTENT_COUNT, contentTitle);
-        db.run(SQL_INSERT_CONTENT_URL, contentTitle, url);
+        db.run(SQL_UPDATE_CONTENT_COUNT, urlType, contentTitle);
+        db.run(SQL_INSERT_CONTENT_URL, urlType, contentTitle, url);
     });
 }
 
