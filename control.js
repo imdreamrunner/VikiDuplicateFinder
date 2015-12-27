@@ -133,8 +133,8 @@ function init() {
 }
 
 var startingJobs = [
-    loadTasks,
     database.changeAllProcessingUrlsToPending,
+    loadTasks,
     scheduler.start
 ];
 
