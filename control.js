@@ -82,6 +82,8 @@ function loadTasks(callback) {
             loadingTask = false;
         };
 
+        if (urls.length == 0) finishing();
+
         for (let i = 0; i < urls.length; i++) {
             let url = urls[i];
             logger.log(LOG_TAGS, "Load URL " + url + " from database.");

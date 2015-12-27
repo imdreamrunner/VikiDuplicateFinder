@@ -103,7 +103,7 @@ function selectTaskAndRun() {
             task(workerId);
             selectTaskAndRun();
         }
-    } else if (numQueueingTask == 0) {
+    } else if (numQueueingTask == 0 && numRunningTask == 0) {
         isRunning = false;
         logger.log(LOG_TAGS, "Scheduler finished all tasks and stopped.");
     }
