@@ -65,10 +65,11 @@ app.controller('TableController', function($scope, Contents, ngDialog) {
     };
 
     $scope.getPageNavList = function() {
-        var maxPage = Math.ceil(1.0 * Contents.data.count / PAGE_SIZE) - 1;
+        var maxPage = Math.max(Math.ceil(1.0 * Contents.data.count / PAGE_SIZE) - 1, 1);
         var currentPage = Contents.data.page;
         var pageList = [];
         pageList.push(1);
+        if (maxPage == 1) return pageList;
         if (currentPage > 4) {
             pageList.push(-1);
         }

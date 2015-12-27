@@ -175,6 +175,8 @@ function createContent(url, contentTitle) {
 const CONTENT_RESULT_PAGE_SIZE = 10;
 function getContents(type, minimumCount, page) {
 
+    page --;
+
     var getContentCount, getContentList;
     if (type != constant.TYPE_ALL) {
         getContentCount = Q.ninvoke(db, "get", SQL_COUNT_QUERY_TYPE, type, minimumCount)
