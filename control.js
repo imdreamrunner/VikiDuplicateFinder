@@ -48,7 +48,7 @@ function processHtml(url, html, callback) {
     var foundUrls = parsedHtml.findAllUrls();
     logger.log(PROCESS_LOG_TAGS, "Found " + foundUrls.size + " new URLs.");
     database.addUrls(foundUrls, callback);
-    if (pageType != constant.TYPE_OTHER) {
+    if (pageType != constant.TYPE_OTHER && pageType != constant.TYPE_EXPLORE) {
         var contentTitle = parsedHtml.getOpenGraphTitle();
         if (!contentTitle || !contentTitle.length) {
             contentTitle = "(empty)";
