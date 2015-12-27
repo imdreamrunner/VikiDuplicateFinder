@@ -119,10 +119,14 @@ function stop(callback) {
     if (callback) callback();
 }
 
+function checkIsRunning() {
+    return isRunning;
+}
+
 module.exports = {
     start: start,
     stop: stop,
     addTask: addTask,
     completeTask: completeTask,
-    isRunning: isRunning
+    checkIsRunning: checkIsRunning
 };

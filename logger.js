@@ -37,7 +37,7 @@ function log(tags, message) {
     var fileLogMessage = currentTime.getTime() + "|" + tags.join(',') + "|" + message + '\n';
     broadcast({
         isInitialized: true,
-        isRunning: scheduler.isRunning,
+        isRunning: scheduler.checkIsRunning(),
         isFinished: false,
         workerStatus: workerStatus,
         tags: tags,
