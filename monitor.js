@@ -4,27 +4,46 @@
 
 const koa = require('koa');
 const http = require('http');
-const serve = require('koa-static');
+const koaStatic = require('koa-static');
+const koaRouter = require('koa-router');
+const koaJson = require('koa-json');
 const ws = require("nodejs-websocket");
+const Q = require('q');
 
 const logger = require('./logger');
+const constant = require('./constant');
+const database = require('./database');
 
 const LOG_TAGS = ['SCHEDULER'];
 
 var app = koa();
-app.use(serve('static'));
+var router = koaRouter();
 
-//app.ws.use(route.all('/ws/', function* (next) {
-//    const control = require('./control');
-//    this.websocket.on('message', function(message) {
-//        var m = JSON.parse(message);
-//        if (m['event'] == 'action') {
-//            if (m['action'] == 'init') control.init();
-//            if (m['action'] == 'start') control.start();
-//        }
-//    });
-//    yield next;
-//}));
+router.get('/contents', function* (next) {
+    var type = constant.TYPE_ALL;
+    var minimumCount = 1;
+    var page = 0;
+    if (this.query.hasOwnProperty('type')) {
+        type = this.query['type'];
+    }
+    if (this.query.hasOwnProperty('minimumCount')) {
+        minimumCount = this.query['minimumCount'];
+    }
+    if (this.query.hasOwnProperty('page')) {
+        page = this.query['page'];
+    }
+    this.body = yield Q.fcall(database.getContents, type, minimumCount, page)
+    .catch(function (err) {
+        return {
+            error: err
+        }
+    });
+});
+
+app.use(koaJson());
+app.use(router.routes());
+app.use(router.allowedMethods());
+app.use(koaStatic('static'));
 
 function startMonitor(callback) {
     logger.log(LOG_TAGS, "Starting monitor.");

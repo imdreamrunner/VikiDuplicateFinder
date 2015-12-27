@@ -7,7 +7,6 @@ const NUM_WORKER = 10;
 
 var app = angular.module('VdfApp', ['ngWebSocket', 'luegg.directives']);
 
-
 app.factory('Server', function($websocket) {
     var ws = $websocket('ws://' + document.domain + ':3001/');
     var service = {};

@@ -21,6 +21,7 @@ section {
 section .container {
   border: 1px solid #CCCCCC;
   border-radius: 5px;
+  padding-top: 20px;
   background: #FFFFFF;
 }
 section .container h2 {
@@ -31,12 +32,9 @@ section .container h2 {
   border: 1px solid #CCCCCC;
   padding: 4px 6px;
   background: #FFFFFF;
-  margin: -15px 0 0 0;
+  margin: -35px 0 0 0;
   border-radius: 5px;
   z-index: 50;
-}
-section .container .row {
-  padding-top: 20px;
 }
 #control button {
   margin-top: 5px;
@@ -54,4 +52,8 @@ section .container .row {
   border-radius: 4px;
   padding: 2px 4px 0 4px;
   margin-right: 4px;
+}
+.pageNav {
+  display: inline-block;
+  margin-left: 8px;
 }

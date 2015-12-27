@@ -1,10 +1,11 @@
 "use strict";
 
-var sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require('sqlite3').verbose();
+const Q = require('q');
 
-var logger = require('./logger');
-var helper = require('./helper');
-var constant = require('./constant');
+const logger = require('./logger');
+const helper = require('./helper');
+const constant = require('./constant');
 
 //var DATABASE_FILE = ':memory:';
 var DATABASE_FILE = 'test.db';
@@ -44,9 +45,15 @@ var SQL_SELECT_URL = `SELECT url FROM urls WHERE id = ?`;
 
 var SQL_SELECT_CONTENT = `SELECT title FROM contents WHERE id = ?`;
 
+var SQL_QUERY_TYPE = 'SELECT * FROM contents WHERE type = ? AND count >= ? ORDER BY count DESC, title LIMIT ? OFFSET ?';
+var SQL_QUERY_TYPE_ALL = 'SELECT * FROM contents WHERE count >= ? ORDER BY count DESC, title LIMIT ? OFFSET ?';
+
+var SQL_COUNT_QUERY_TYPE = 'SELECT count(*) AS count FROM contents WHERE type = ? AND count >= ?';
+var SQL_COUNT_QUERY_TYPE_ALL = 'SELECT count(*) AS count FROM contents WHERE count >= ?';
+
 var SQL_INSERT_URL = `INSERT INTO
 urls   (url, type, status)
-VALUES (?,   ?   , ?     )
+VALUES (?  , ?   , ?     )
 `;
 
 var SQL_INSERT_CONTENT = `INSERT INTO
@@ -165,11 +172,41 @@ function createContent(url, contentTitle) {
     });
 }
 
+const CONTENT_RESULT_PAGE_SIZE = 10;
+function getContents(type, minimumCount, page) {
+
+    var getContentCount, getContentList;
+    if (type != constant.TYPE_ALL) {
+        getContentCount = Q.ninvoke(db, "get", SQL_COUNT_QUERY_TYPE, type, minimumCount)
+            .then(function(row) {
+                return row['count'];
+            });
+        getContentList = Q.ninvoke(db, "all", SQL_QUERY_TYPE, type, minimumCount,
+            CONTENT_RESULT_PAGE_SIZE, CONTENT_RESULT_PAGE_SIZE * page);
+    } else {
+        getContentCount = Q.ninvoke(db, "get", SQL_COUNT_QUERY_TYPE_ALL, minimumCount)
+            .then(function(row) {
+                return row['count'];
+            });
+        getContentList = Q.ninvoke(db, "all", SQL_QUERY_TYPE_ALL, minimumCount,
+            CONTENT_RESULT_PAGE_SIZE, CONTENT_RESULT_PAGE_SIZE * page);
+    }
+
+    return Q.all([getContentCount, getContentList])
+        .spread(function (count, rows) {
+            return {
+                count: count,
+                rows: rows
+            };
+        });
+}
+
 module.exports = {
     initialize: initialize,
     tearDown: tearDown,
     addUrls: addUrls,
     fetchNewUrls: fetchNewUrls,
     createContent: createContent,
-    changeUrlStatus: changeUrlStatus
+    changeUrlStatus: changeUrlStatus,
+    getContents: getContents
 };

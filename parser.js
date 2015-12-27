@@ -6,6 +6,7 @@
 var cheerio = require('cheerio');
 var logger = require('./logger');
 var helper = require('./helper');
+var constant = require('./constant');
 
 function trimString(str) {
     return str.replace(/^\s+|\s+$/g, '');
@@ -31,6 +32,8 @@ function parse(html) {
         $('a').each(function(i, element) {
             var link = $(element).attr('href');
             if (typeof link === "undefined") return;
+            /*
+            // for the old crawler.
             link = link.replace(HASHTAGS, '');
             if (link.match(JAVASCRIPT_CALL)) return;
             if (link.match(LINK_WITH_PROTOCOL)) {
@@ -42,6 +45,8 @@ function parse(html) {
             }
             if (link.match(CHANGE_LOCALE)) return;
             if (link.length == 0) return;
+            */
+            if (helper.getUrlType(link) == constant.TYPE_OTHER) return;
             urls.add(link);
             if (link.indexOf('?') > -1) {
                 urls.add(link.substr(0, link.indexOf('?')));

@@ -53,10 +53,6 @@ function processHtml(url, html, callback) {
         if (!contentTitle || !contentTitle.length) {
             contentTitle = "(empty)";
         }
-        //if (pageType == constant.TYPE_CHANNEL) contentTitle = "CH:" + contentTitle;
-        //if (pageType == constant.TYPE_VIDEO) contentTitle = "V:" + contentTitle;
-        //if (pageType == constant.TYPE_CELEBRITY) contentTitle = "C:" + contentTitle;
-        //logger.log(LOG_TAGS, "Content title: " + contentTitle);
         database.createContent(url, contentTitle);
     }
 }
@@ -105,7 +101,7 @@ function loadTasks(callback) {
     });
 }
 
-const STARTING_URL = "/";
+const STARTING_URL = "/explore";
 
 function addInitialUrl(callback) {
     var startUrlSet = new Set();
