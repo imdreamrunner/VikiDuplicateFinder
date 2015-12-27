@@ -51,6 +51,8 @@ var SQL_QUERY_TYPE_ALL = 'SELECT * FROM contents WHERE count >= ? ORDER BY count
 var SQL_COUNT_QUERY_TYPE = 'SELECT count(*) AS count FROM contents WHERE type = ? AND count >= ?';
 var SQL_COUNT_QUERY_TYPE_ALL = 'SELECT count(*) AS count FROM contents WHERE count >= ?';
 
+var SQL_COUNT_URL_STATUS = 'SELECT count(*) AS count FROM urls WHERE status = ?';
+
 var SQL_INSERT_URL = `INSERT INTO
 urls   (url, type, status)
 VALUES (?  , ?   , ?     )
@@ -203,6 +205,31 @@ function getContents(type, minimumCount, page) {
         });
 }
 
+function urlStatusCountPromise(status) {
+    return Q.ninvoke(db, "get", SQL_COUNT_URL_STATUS, status)
+        .then(function(row) {
+            return row['count'];
+        });
+}
+
+function getUrlStatus() {
+    var promises = [
+        urlStatusCountPromise(constant.STATUS_NEW),
+        urlStatusCountPromise(constant.STATUS_PROCESSING),
+        urlStatusCountPromise(constant.STATUS_SUCCEED),
+        urlStatusCountPromise(constant.STATUS_FAILED)
+    ];
+    return Q.all(promises)
+        .spread(function (newCount, processingCount, succeedCount, failedCount) {
+            return {
+                pending: newCount,
+                processing: processingCount,
+                succeeded: succeedCount,
+                failed: failedCount
+            }
+        });
+}
+
 module.exports = {
     initialize: initialize,
     tearDown: tearDown,
@@ -210,5 +237,6 @@ module.exports = {
     fetchNewUrls: fetchNewUrls,
     createContent: createContent,
     changeUrlStatus: changeUrlStatus,
-    getContents: getContents
+    getContents: getContents,
+    getUrlStatus: getUrlStatus
 };

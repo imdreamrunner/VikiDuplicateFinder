@@ -33,9 +33,14 @@ app.factory('Contents', function($http) {
     return service;
 });
 
-app.controller('StatusController', function($scope) {
+app.controller('StatusController', function($scope, $http) {
     $scope.processedCount = 0;
     $scope.pendingCount = 0;
+    $http.get('/urlStatus')
+    .then(function (response) {
+        $scope.processedCount = response.data.succeeded + response.data.failed;
+        $scope.pendingCount = response.data.pending + response.data.processing;
+    });
 });
 
 app.controller('FilterController', function($scope, Contents) {

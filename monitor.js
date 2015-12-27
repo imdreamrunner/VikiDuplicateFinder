@@ -40,6 +40,15 @@ router.get('/contents', function* (next) {
     });
 });
 
+router.get('/urlStatus', function* (next) {
+    this.body = yield Q.fcall(database.getUrlStatus)
+        .catch(function(err) {
+            return {
+                error: err
+            }
+        });
+});
+
 app.use(koaJson());
 app.use(router.routes());
 app.use(router.allowedMethods());
