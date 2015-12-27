@@ -29,12 +29,16 @@ function close(callback) {
 }
 
 function log(tags, message) {
+    const scheduler = require('./scheduler');
     var currentTime = new Date();
     var currentTimeString = dateformat(currentTime, "yyyy-mm-dd H:MM:ss");
     var printOutMessage = currentTimeString + " [" + tags.join(", ") + "] " + message;
     console.log(printOutMessage);
     var fileLogMessage = currentTime.getTime() + "|" + tags.join(',') + "|" + message + '\n';
     broadcast({
+        isInitialized: true,
+        isRunning: scheduler.isRunning,
+        isFinished: false,
         workerStatus: workerStatus,
         tags: tags,
         message: message

@@ -123,5 +123,6 @@ module.exports = {
     start: start,
     stop: stop,
     addTask: addTask,
-    completeTask: completeTask
+    completeTask: completeTask,
+    isRunning: isRunning
 };
