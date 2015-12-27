@@ -54,23 +54,50 @@ app.controller('FilterController', function($scope, Contents) {
     }
 });
 
+function displayType(type) {
+    switch (type) {
+        case 0: return "Other";
+        case 1: return "Channel";
+        case 2: return "Video";
+        case 3: return "Celebrity";
+        case -1: return "All";
+    }
+}
+
+function ContentDetailController($scope, type, title, $http) {
+    $scope.title = title;
+    $scope.type = type;
+    $scope.urls = [];
+    $scope.displayType = displayType;
+    $http.get('/urls', {
+        params: {
+            type: type,
+            title: title
+        }
+    })
+    .then(function (response) {
+        $scope.urls = response.data;
+    });
+}
+
 app.controller('TableController', function($scope, Contents, ngDialog) {
     $scope.data = Contents.data;
 
-    $scope.displayType = function (type) {
-        switch (type) {
-            case 0: return "Other";
-            case 1: return "Channel";
-            case 2: return "Video";
-            case 3: return "Celebrity";
-            case -1: return "All";
-        }
-    };
+    $scope.displayType = displayType;
 
-    $scope.openUrlList = function () {
+    $scope.openUrlList = function (type, title) {
         ngDialog.open({
             className: 'ngdialog-theme-plain',
-            template: 'urlList'
+            template: 'urlList',
+            controller: ContentDetailController,
+            resolve: {
+                type: function () {
+                    return type;
+                },
+                title: function() {
+                    return title;
+                }
+            }
         });
     };
 

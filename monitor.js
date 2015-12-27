@@ -49,6 +49,31 @@ router.get('/urlStatus', function* (next) {
         });
 });
 
+router.get('/urls', function* (next) {
+
+    if (!this.query.hasOwnProperty('type')) {
+        this.body = {
+            error: "Invalid Request."
+        };
+        return;
+    }
+
+    if (!this.query.hasOwnProperty('title')) {
+        this.body = {
+            error: "Invalid Request."
+        };
+        return;
+    }
+
+    this.body = yield Q.fcall(database.getUrls, this.query['type'], this.query['title'])
+        .catch(function(err) {
+            return {
+                error: err
+            }
+        });
+
+});
+
 app.use(koaJson());
 app.use(router.routes());
 app.use(router.allowedMethods());

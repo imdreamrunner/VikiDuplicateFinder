@@ -41,9 +41,8 @@ var SQL_CREATE_TABLE_CONTENT_URL = `CREATE TABLE content_url (
     FOREIGN KEY(URL) REFERENCES urls(url)
 )`;
 
-var SQL_SELECT_URL = `SELECT url FROM urls WHERE id = ?`;
 
-var SQL_SELECT_CONTENT = `SELECT title FROM contents WHERE id = ?`;
+var SQL_QUERY_URLS = `SELECT url FROM content_url WHERE type = ? AND title = ?`;
 
 var SQL_QUERY_TYPE = 'SELECT * FROM contents WHERE type = ? AND count >= ? ORDER BY count DESC, title LIMIT ? OFFSET ?';
 var SQL_QUERY_TYPE_ALL = 'SELECT * FROM contents WHERE count >= ? ORDER BY count DESC, title LIMIT ? OFFSET ?';
@@ -245,6 +244,17 @@ function getUrlStatus() {
         });
 }
 
+function getUrls(type, title) {
+    return Q.ninvoke(db, "all", SQL_QUERY_URLS, type, title)
+        .then(function(rows) {
+            var urlList = [];
+            rows.forEach(function(row) {
+                urlList.push(row['url']);
+            });
+            return urlList;
+        });
+}
+
 module.exports = {
     initialize: initialize,
     tearDown: tearDown,
@@ -254,5 +264,6 @@ module.exports = {
     changeUrlStatus: changeUrlStatus,
     changeAllProcessingUrlsToPending: changeAllProcessingUrlsToPending,
     getContents: getContents,
-    getUrlStatus: getUrlStatus
+    getUrlStatus: getUrlStatus,
+    getUrls: getUrls
 };

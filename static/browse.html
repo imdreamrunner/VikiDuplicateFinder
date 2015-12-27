@@ -88,7 +88,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="row in data.rows" ng-click="openUrlList()">
+                    <tr ng-repeat="row in data.rows" ng-click="openUrlList(row.type, row.title)">
                         <td class="col-sm-1 text-center">
                             {{ displayType(row.type) }}
                         </td>
@@ -120,8 +120,12 @@
 
 <script type="text/ng-template" id="urlList">
     <div class="urlList">
-        <h2>Template heading</h2>
-        <p>Content goes here</p>
+        <h2>[{{ displayType(type) }}]  {{ title }}</h2>
+        <ul>
+            <li ng-repeat="url in urls">
+                <a href="https://www.viki.com{{ url }}" target="_blank">{{url}}</a>
+            </li>
+        </ul>
     </div>
 </script>
 
