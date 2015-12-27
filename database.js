@@ -8,7 +8,7 @@ const helper = require('./helper');
 const constant = require('./constant');
 
 //var DATABASE_FILE = ':memory:';
-var DATABASE_FILE = 'test.db';
+var DATABASE_FILE = 'data.db';
 
 var db = new sqlite3.Database(DATABASE_FILE);
 
