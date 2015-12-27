@@ -51,7 +51,6 @@ app.factory('Server', function($websocket) {
         sendAction('start');
     };
     service.stop = function() {
-        service.isRunning = false;
         sendAction('stop');
     };
     service.logs = logs;
