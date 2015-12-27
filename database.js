@@ -159,6 +159,7 @@ function changeUrlStatus(url, status, callback) {
         if (err) {
             throw err;
         }
+        logger.log(LOG_TAGS, "Changed URL " + url + " status to " + status);
         if (callback) callback();
     });
 }

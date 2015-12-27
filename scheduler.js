@@ -105,7 +105,7 @@ function selectTaskAndRun() {
         }
     } else if (numQueueingTask == 0) {
         isRunning = false;
-        logger.log(LOG_TAGS, "Scheduler finished all tasks and stoped.");
+        logger.log(LOG_TAGS, "Scheduler finished all tasks and stopped.");
     }
 
 }
