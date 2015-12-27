@@ -76,9 +76,12 @@ var SQL_UPDATE_URL_STATUS = `UPDATE urls
 SET status = ?
 WHERE url = ?`;
 
+var SQL_UPDATE_ALL_PENDING = `UPDATE urls SET status = 0 WHERE status = 1`;
+
 var SQL_UPDATE_CONTENT_COUNT = `UPDATE contents
 SET count = count + 1
 WHERE type = ? and title = ?`;
+
 
 var INITIALIZATION_SQLS = [
     SQL_DROP_TABLES,
@@ -164,6 +167,17 @@ function changeUrlStatus(url, status, callback) {
     });
 }
 
+function changeAllProcessingUrlsToPending(callback) {
+    if (isClosed) return;
+    db.run(SQL_UPDATE_ALL_PENDING, function(err) {
+        if (err) {
+            throw err;
+        }
+        logger.log(LOG_TAGS, "Changed all processing URLs to pending.");
+        if (callback) callback();
+    });
+}
+
 function createContent(url, contentTitle) {
     db.serialize(function() {
         var urlType = helper.getUrlType(url);
@@ -238,6 +252,7 @@ module.exports = {
     fetchNewUrls: fetchNewUrls,
     createContent: createContent,
     changeUrlStatus: changeUrlStatus,
+    changeAllProcessingUrlsToPending: changeAllProcessingUrlsToPending,
     getContents: getContents,
     getUrlStatus: getUrlStatus
 };

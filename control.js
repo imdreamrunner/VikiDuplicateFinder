@@ -134,6 +134,7 @@ function init() {
 
 var startingJobs = [
     loadTasks,
+    database.changeAllProcessingUrlsToPending,
     scheduler.start
 ];
 
