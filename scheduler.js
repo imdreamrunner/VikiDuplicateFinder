@@ -75,7 +75,10 @@ function completeTask(taskId) {
 function runTask() {
     logger.log(LOG_TAGS, "Trying to run new task. Current available workers: " + availableWorkers.length +
                          " Current queuing tasks: " + numQueueingTask);
-    if (!isRunning) return;
+    if (!isRunning) {
+        logger.log(LOG_TAGS, "Scheduler is stopped.");
+        return;
+    }
 
     // Scheduler is becoming empty. Ask for more task from control.
     if (numQueueingTask < 2 * config.MAX_CONCURRENT_HTTP_CONNECTION) {
@@ -86,6 +89,7 @@ function runTask() {
 }
 
 function selectTaskAndRun() {
+    logger.log(LOG_TAGS, "Select a task to run.");
 
     // Select a task to run.
     if (availableWorkers.length > 0 && numQueueingTask > 0) {
