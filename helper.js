@@ -4,7 +4,7 @@ var logger = require('./logger');
 var CHANNEL_URL = /^\/tv\/[^?\/]+$/;
 var VIDEO_URL = /^\/videos\/[^?\/]+$/;
 var CELEBRITY_URL = /^\/celebrities\/[^?\/]+$/;
-var EXPLORE_URL = /^\/explore?page=[^?\/]+$/;
+var EXPLORE_URL = /^\/explore\?page=[^&]+$/;
 
 
 function getUrlType(url) {

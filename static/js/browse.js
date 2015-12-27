@@ -33,6 +33,11 @@ app.factory('Contents', function($http) {
     return service;
 });
 
+app.controller('StatusController', function($scope) {
+    $scope.processedCount = 0;
+    $scope.pendingCount = 0;
+});
+
 app.controller('FilterController', function($scope, Contents) {
     $scope.selectType = "-1";
     $scope.selectMinimumCount = "1";

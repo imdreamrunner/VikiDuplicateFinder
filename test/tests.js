@@ -20,5 +20,11 @@ describe("helper", function() {
         it("should classify /tv/001?heihei as other", function() {
             assert.equal(helper.getUrlType('/tv/001?heihei'), constant.TYPE_OTHER);
         });
+        it("should classify /explore?page=1 as explore", function() {
+            assert.equal(helper.getUrlType('/explore?page=1'), constant.TYPE_EXPLORE);
+        });
+        it("should classify /explore?page=1&other=2 as other", function() {
+            assert.equal(helper.getUrlType('/explore?page=1&other=2'), constant.TYPE_OTHER);
+        });
     });
 });
