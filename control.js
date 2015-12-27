@@ -103,6 +103,10 @@ function loadTasks(callback) {
     });
 }
 
+function isLoadingTask() {
+    return loadingTask;
+}
+
 const STARTING_URL = "/explore";
 
 function addInitialUrl(callback) {
@@ -162,6 +166,7 @@ module.exports = {
     init: init,
     start: start,
     loadTasks: loadTasks,
+    isLoadingTask: isLoadingTask,
     stop: stop,
     exit: exit
 };
