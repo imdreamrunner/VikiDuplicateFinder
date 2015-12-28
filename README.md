@@ -31,6 +31,16 @@ You may also browse the result by clicking the "Browse" button on top right corn
 
 ## Design Notes
 
+### How does it crawl data?
+
+1. First visit https://www.viki.com/explore
+2. Get all the URLs recursively that match content URL or /explore?page=X
+3. Read the Open Graph protocol's title information from content pages.
+
+### Special Files
+
+It stores data into the `data.db` file in SQLite 3 format and log into `log.txt`.
+
 ### Technology Used
 
 * SQLite 3
