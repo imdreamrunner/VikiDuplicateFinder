@@ -1,7 +1,7 @@
 "use strict";
 
-var control = require('./control');
-var logger = require('./logger');
+const control = require('./control');
+const logger = require('./logger');
 
 control.prepare();
 

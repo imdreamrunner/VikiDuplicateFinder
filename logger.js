@@ -1,8 +1,8 @@
 
 "use strict";
 
-var fs = require('fs');
-var dateformat = require('dateformat');
+const fs = require('fs');
+const dateformat = require('dateformat');
 
 var LOG_FILE = 'log.txt';
 

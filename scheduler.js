@@ -3,8 +3,8 @@
  */
 "use strict";
 
-var logger = require('./logger');
-var config = require('./config');
+const logger = require('./logger');
+const config = require('./config');
 
 var LOG_TAGS = ['SCHEDULER'];
 

@@ -3,10 +3,10 @@
  */
 "use strict";
 
-var cheerio = require('cheerio');
-var logger = require('./logger');
-var helper = require('./helper');
-var constant = require('./constant');
+const cheerio = require('cheerio');
+const logger = require('./logger');
+const helper = require('./helper');
+const constant = require('./constant');
 
 function trimString(str) {
     return str.replace(/^\s+|\s+$/g, '');

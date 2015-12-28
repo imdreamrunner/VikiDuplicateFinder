@@ -1,14 +1,14 @@
 "use strict";
 
-var logger = require('./logger');
-var remote = require('./remote');
-var config = require('./config');
-var parser = require('./parser');
-var scheduler = require('./scheduler');
-var database = require('./database');
-var monitor = require('./monitor');
-var helper = require('./helper');
-var constant = require('./constant');
+const logger = require('./logger');
+const remote = require('./remote');
+const config = require('./config');
+const parser = require('./parser');
+const scheduler = require('./scheduler');
+const database = require('./database');
+const monitor = require('./monitor');
+const helper = require('./helper');
+const constant = require('./constant');
 
 var LOG_TAGS = ['CONTROL'];
 var PROCESS_LOG_TAGS = LOG_TAGS.concat(['PROCESS']);

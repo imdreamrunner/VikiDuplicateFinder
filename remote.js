@@ -1,6 +1,6 @@
-var http = require('http');
-var https = require('https');
-var logger = require('./logger');
+const http = require('http');
+const https = require('https');
+const logger = require('./logger');
 
 var LOG_TAGS = ["REMOTE"];
 
